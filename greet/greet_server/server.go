@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	greet "grpc_course/greet/greetpb"
 	"log"
@@ -11,6 +12,16 @@ import (
 
 type server struct{
 	greet.UnimplementedGreetServiceServer
+}
+func (*server) Greet(ctx context.Context,req  *greet.GreetRequest) (*greet.GreetResponse, error){
+	fmt.Printf("Greet function was invoked with %v", req)
+	firstName := req.GetGreeting().GetFirstName()
+	lastName := req.GetGreeting().GetLastName()
+	result := "Hello " + firstName + " " + lastName
+	res := &greet.GreetResponse{
+		Result: result,
+	}
+	return res,nil
 }
 
 func main() {
